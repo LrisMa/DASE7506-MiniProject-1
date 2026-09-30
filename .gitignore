@@ -1,0 +1,7 @@
+code/__pycache__/
+code/*.pyc
+code/runs/
+code/assets/*.pt
+!code/assets/trigram_top8.pt
+!code/assets/fourgram_top1_min3.pt
+!code/assets/fivegram_top1_min3.pt
