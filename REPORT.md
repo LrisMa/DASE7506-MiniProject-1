@@ -21,13 +21,13 @@ The supplied baseline is a four-layer causal GPT with width 128, four heads, GEL
 My first controlled change replaces only the GELU feed-forward layer with SwiGLU. A standard baseline MLP uses
 
 $$
-\operatorname{Linear}(d,4d) \rightarrow \operatorname{GELU} \rightarrow \operatorname{Linear}(4d,d).
+\mathrm{Linear}(d,4d) \rightarrow \mathrm{GELU} \rightarrow \mathrm{Linear}(4d,d).
 $$
 
 For SwiGLU, I use `hidden = floor(8d/3)` so that the extra gate matrix is parameter matched:
 
 $$
-g,v=\operatorname{Linear}(d,2h)(x), \qquad \operatorname{MLP}(x)=\operatorname{Linear}(h,d)(\operatorname{SiLU}(g) \odot v).
+g,v=\mathrm{Linear}(d,2h)(x), \qquad \mathrm{MLP}(x)=\mathrm{Linear}(h,d)(\mathrm{SiLU}(g) \odot v).
 $$
 
 All other conditions, including seed, training targets, attention, optimizer, tokenizer, and evaluation protocol, were unchanged. This isolates the architectural change.
@@ -58,7 +58,7 @@ An exponential moving average of the baseline weights was an unsuccessful altern
 The final predictor starts from the large SwiGLU distribution and combines four complementary sources. The frozen large checkpoint is paired with a 2,400-step medium SwiGLU checkpoint at peer weight 0.30. Rather than arithmetic probability averaging, the final version uses geometric fusion:
 
 $$
-\log p_{ens}=\operatorname{logsoftmax}(0.70\log p_{large}+0.30\log p_{medium}).
+\log p_{ens}=\mathrm{logsoftmax}(0.70\log p_{large}+0.30\log p_{medium}).
 $$
 
 This emphasizes continuations supported by both independently trained models.
